@@ -236,6 +236,8 @@ private: // メンバ関数
 	/// テクスチャ読み込み
 	/// </summary>
 	void LoadTextures();
+
+
 };
 
 } // namespace KamataEngine

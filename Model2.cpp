@@ -819,32 +819,48 @@ Model2* Model2::CreateSquare(const int max) {
 	Model2* instance = new Model2;
 	std::vector<Mesh::VertexPosNormalUv> vertices;
 	std::vector<uint32_t> indices;
+	// 楕円のワールドトランスフォーム
+	std::array<KamataEngine::WorldTransform, 1> ellipseWorldTransfroms_;
 
 	// 頂点数
 	const uint32_t kNumVertices = 4 * max;
 	// インデックス数
 	const uint32_t kNumIndices = 6 * max;
 
+
+
 	vertices.resize(kNumVertices);
 	indices.resize(kNumIndices);
 
-	for (int i = 0; i < max; i++) {
+	for (int i = 0; i < ellipseWorldTransfroms_.size(); i++) {
+		
+		KamataEngine::WorldTransform& worldTransform = ellipseWorldTransfroms_[i];
+		
+		//細長い形
+		worldTransform.scale_ = {0.05f, 2.0f, 1.0f};
+		
+		worldTransform.rotation_ = {0.0f, 0.0f, 0.0f};
+		//同じ場所から発生する
+		worldTransform.translation_ = {0.0f, 0.0f, 0.0f};
+
+		worldTransform.Initialize();
+
 		int index = i * 4;
 
 		// 左下
-		vertices[index + 0].pos = {i * 2 + -1.0f, -1.0f, 0.0f};
+		vertices[index + 0].pos = {i * 2 + -1.0f, -0.08f, 0.0f};
 		vertices[index + 0].uv = {0, 1};
 		vertices[index + 0].normal = {0, 0, 1};
-		// 左上
-		vertices[index + 1].pos = {i * 2 + -1.0f, 1.0f, 0.0f};
+		// 右上
+		vertices[index + 1].pos = {i * 2 + -3.0f, 0.08f, 0.0f};
 		vertices[index + 1].uv = {0, 0};
 		vertices[index + 1].normal = {0, 0, 1};
-		// 右下
-		vertices[index + 2].pos = {i * 2 + 1.0f, -1.0f, 0.0f};
+		// 左下
+		vertices[index + 2].pos = {i * 2 + 3.0f, -0.08f, 0.0f};
 		vertices[index + 2].uv = {1, 1};
 		vertices[index + 2].normal = {0, 0, 1};
 		// 右上
-		vertices[index + 3].pos = {i * 2 + 1.0f, 1.0f, 0.0f};
+		vertices[index + 3].pos = {i * 2 + 1.0f, 0.08f, 0.0f};
 		vertices[index + 3].uv = {1, 0};
 		vertices[index + 3].normal = {0, 0, 1};
 	}
