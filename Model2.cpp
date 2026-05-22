@@ -820,7 +820,7 @@ Model2* Model2::CreateSquare(const int max) {
 	std::vector<Mesh::VertexPosNormalUv> vertices;
 	std::vector<uint32_t> indices;
 	// 楕円のワールドトランスフォーム
-	std::array<KamataEngine::WorldTransform, 1> ellipseWorldTransfroms_;
+	std::array<KamataEngine::WorldTransform, 4> ellipseWorldTransfroms_;
 
 	// 頂点数
 	const uint32_t kNumVertices = 4 * max;
@@ -837,11 +837,11 @@ Model2* Model2::CreateSquare(const int max) {
 		KamataEngine::WorldTransform& worldTransform = ellipseWorldTransfroms_[i];
 		
 		//細長い形
-		worldTransform.scale_ = {0.05f, 2.0f, 1.0f};
+		worldTransform.scale_ = {1.0f, 1.0f, 1.0f};
 		
-		worldTransform.rotation_ = {0.0f, 0.0f, 0.0f};
+		worldTransform.rotation_ = {0.0f, 0.0f, 0.3f * i};
 		//同じ場所から発生する
-		worldTransform.translation_ = {0.0f, 0.0f, 0.0f};
+		worldTransform.translation_ = {i * 2.0f,i * 1.0f, 0.0f};
 
 		worldTransform.Initialize();
 
