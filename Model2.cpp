@@ -838,29 +838,57 @@ Model2* Model2::CreateSquare(const int max) {
 		
 		//細長い形
 		worldTransform.scale_ = {1.0f, 1.0f, 1.0f};
+
+		//回転
+		float angle = (2.0f * 3.14f / max) * i;
+		float c = cosf(angle);
+		float s = sinf(angle);
 		
-		worldTransform.rotation_ = {0.0f, 0.0f, 0.3f * i};
+		worldTransform.rotation_ = {0.0f, 0.0f,angle};
 		//同じ場所から発生する
-		worldTransform.translation_ = {i * 2.0f,i * 1.0f, 0.0f};
+		worldTransform.translation_ = {0.0f,0.0f, 0.0f};
 
 		worldTransform.Initialize();
 
 		int index = i * 4;
 
+		// 元の四角形
+		Vector3 p0 = {i * 2 + -1.0f, -0.08f, 0.0f};
+		Vector3 p1 = {i * 2 + -3.0f, 0.08f, 0.0f};
+		Vector3 p2 = {i * 2 +  3.0f, -0.08f, 0.0f};
+		Vector3 p3 = {i * 2 +  1.0f, 0.08f, 0.0f};
+
+			// 回転計算
+		auto RotateZ = [&](Vector3 p) {
+			Vector3 result;
+
+			result.x = p.x * c - p.y * s;
+			result.y = p.x * s + p.y * c;
+			result.z = p.z;
+
+			return result;
+		};
+
+		p0 = RotateZ(p0);
+		p1 = RotateZ(p1);
+		p2 = RotateZ(p2);
+		p3 = RotateZ(p3);
+
+
 		// 左下
-		vertices[index + 0].pos = {i * 2 + -1.0f, -0.08f, 0.0f};
+		vertices[index + 0].pos = p0;
 		vertices[index + 0].uv = {0, 1};
 		vertices[index + 0].normal = {0, 0, 1};
 		// 右上
-		vertices[index + 1].pos = {i * 2 + -3.0f, 0.08f, 0.0f};
+		vertices[index + 1].pos = p1;
 		vertices[index + 1].uv = {0, 0};
 		vertices[index + 1].normal = {0, 0, 1};
 		// 左下
-		vertices[index + 2].pos = {i * 2 + 3.0f, -0.08f, 0.0f};
+		vertices[index + 2].pos = p2;
 		vertices[index + 2].uv = {1, 1};
 		vertices[index + 2].normal = {0, 0, 1};
 		// 右上
-		vertices[index + 3].pos = {i * 2 + 1.0f, 0.08f, 0.0f};
+		vertices[index + 3].pos = p3;
 		vertices[index + 3].uv = {1, 0};
 		vertices[index + 3].normal = {0, 0, 1};
 	}
