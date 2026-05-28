@@ -852,6 +852,7 @@ Model2* Model2::CreateSquare(const int max) {
 
 		int index = i * 4;
 
+
 		// 元の四角形
 		Vector3 p0 = {i * 2 + -1.0f, -0.08f, 0.0f};
 		Vector3 p1 = {i * 2 + -3.0f, 0.08f, 0.0f};
