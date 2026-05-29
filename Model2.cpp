@@ -862,6 +862,7 @@ Model2* Model2::CreateSquare(const int max) {
         Vector3 p2 = { length, -width, 0.0f}; // 右下
      
 
+
 		auto RotateZ = [&](Vector3 p) {
 			Vector3 result;
 
