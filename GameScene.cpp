@@ -24,7 +24,7 @@ void GameScene::Initialize() {
 	worldTransform_.rotation_.z = 0.785f;
 
 	// 3Dモデルデータの生成
-	model2 = Model2::CreateSquare(4);
+	model2 = Model2::CreateSquare(64);
 }
 
 void GameScene::Update() {

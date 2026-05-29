@@ -820,7 +820,7 @@ Model2* Model2::CreateSquare(const int max) {
 	std::vector<Mesh::VertexPosNormalUv> vertices;
 	std::vector<uint32_t> indices;
 	// 楕円のワールドトランスフォーム
-	std::array<KamataEngine::WorldTransform, 4> ellipseWorldTransfroms_;
+	std::array<KamataEngine::WorldTransform, 64> ellipseWorldTransfroms_;
 
 	// 頂点数
 	const uint32_t kNumVertices = 4 * max;
@@ -839,10 +839,14 @@ Model2* Model2::CreateSquare(const int max) {
 		//細長い形
 		worldTransform.scale_ = {1.0f, 1.0f, 1.0f};
 
+		float length = 1.0f + (rand() % 100) / 100.0f;
+		float width = 0.003f + (rand() % 100) / 2000.0f;
 		//回転
-		float angle = (2.0f * 3.14f / max) * i;
+		float angle = ((float)rand() / (float)RAND_MAX) * 2.0f * 3.14f;
 		float c = cosf(angle);
 		float s = sinf(angle);
+
+	
 		
 		worldTransform.rotation_ = {0.0f, 0.0f,angle};
 		//同じ場所から発生する
@@ -852,14 +856,12 @@ Model2* Model2::CreateSquare(const int max) {
 
 		int index = i * 4;
 
-
 		// 元の四角形
-		Vector3 p0 = {i * 2 + -1.0f, -0.08f, 0.0f};
-		Vector3 p1 = {i * 2 + -3.0f, 0.08f, 0.0f};
-		Vector3 p2 = {i * 2 +  3.0f, -0.08f, 0.0f};
-		Vector3 p3 = {i * 2 +  1.0f, 0.08f, 0.0f};
+        Vector3 p0 = { 0.0f, -width, 0.0f}; // 左下
+        Vector3 p1 = { 0.0f, width, 0.0f}; // 左上
+        Vector3 p2 = { length, -width, 0.0f}; // 右下
+     
 
-			// 回転計算
 		auto RotateZ = [&](Vector3 p) {
 			Vector3 result;
 
@@ -873,25 +875,21 @@ Model2* Model2::CreateSquare(const int max) {
 		p0 = RotateZ(p0);
 		p1 = RotateZ(p1);
 		p2 = RotateZ(p2);
-		p3 = RotateZ(p3);
 
 
 		// 左下
 		vertices[index + 0].pos = p0;
 		vertices[index + 0].uv = {0, 1};
 		vertices[index + 0].normal = {0, 0, 1};
-		// 右上
+		// 左上
 		vertices[index + 1].pos = p1;
 		vertices[index + 1].uv = {0, 0};
 		vertices[index + 1].normal = {0, 0, 1};
-		// 左下
+		// 右下
 		vertices[index + 2].pos = p2;
 		vertices[index + 2].uv = {1, 1};
 		vertices[index + 2].normal = {0, 0, 1};
-		// 右上
-		vertices[index + 3].pos = p3;
-		vertices[index + 3].uv = {1, 0};
-		vertices[index + 3].normal = {0, 0, 1};
+
 	}
 
 	// インデックス
