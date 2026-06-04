@@ -1,4 +1,6 @@
 #include "GameScene.h"
+#include <algorithm>
+
 using namespace KamataEngine;
 
 GameScene::GameScene() {}
@@ -28,12 +30,44 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
-	// 3Dモデルを更新
+	
+	// 終了なら何もしない
+	if (isFinished_) {
+		return;
+	}
 
+	// カウンターを1フレーム分の秒数進める
+	counter_ += 1.0f / 60.0f;
+
+	// 存続時間の上限に達したら
+	if (counter_ >= kDuration) {
+		counter_ = kDuration;
+
+		// 終了扱いにする
+		isFinished_ = true;
+	}
+	worldTransform_.rotation_.y = 3.14f;
+
+	// 色変更オブジェクトに色の数値を設定する
+	color_.w = std::clamp(1.0f - counter_ / kDuration, 0.0f, 1.0f);
+	objectColor_.SetColor(color_);
+
+	worldTransform_.rotation_.z += 0.1f;
+	worldTransform_.scale_.x *= 1.05f;
+	worldTransform_.scale_.y *= 1.07f;
+
+	// 3Dモデルを更新
 	worldTransform_.UpdateMatrix();
 }
 
 void GameScene::Draw() {
+
+	// 終了なら何もしない
+	if (isFinished_) {
+		return;
+	}
+
+
 	// DirectXCommon インスタンスの取得
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 
