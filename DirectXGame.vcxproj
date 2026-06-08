@@ -270,7 +270,6 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Model2.h" />
-    <ClInclude Include="ヘッダー.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
