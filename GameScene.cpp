@@ -1,84 +1,86 @@
 #include "GameScene.h"
-#include <algorithm>
+#include <random>
+#include"math/MathUtility.h"
 
 using namespace KamataEngine;
+using namespace MathUtility;
 
-GameScene::GameScene() {}
+std::random_device seedGenerator;
+std::mt19937 randomEngine(seedGenerator());
+std::uniform_real_distribution<float> distribution(-1.0f, 1.0f);
 
 // デストラクタ
 GameScene::~GameScene() {
-	// 3Dモデルデータの解放
-	delete model2;
-
-	Model2::StaticFinalize();
+	// エフェクト
+	for (Effect* effect : effects_) {
+		delete effect;
+	}
+	effects_.clear();
 }
 
+// 初期化
 void GameScene::Initialize() {
-	Model2::StaticInitialize();
+	// 乱数の初期化
+	srand((unsigned)time(NULL));
+
+	// 3Dモデルデータ生成
+	modelEffect_ = Model::CreateFromOBJ("plane");
 
 	// カメラの初期化
 	camera_.Initialize();
-
-	// ワールド変換の初期化
-	worldTransform_.Initialize();
-	worldTransform_.scale_ = {10, 10, 10};
-	worldTransform_.rotation_.z = 0.785f;
-
-	objectColor_.Initialize();
-	color_ = {1.0f,1.0f, 1.0f, 1.0f};
-
-	// 3Dモデルデータの生成
-	model2 = Model2::CreateSquare(64);
 }
 
+// 更新
 void GameScene::Update() {
-	
-	// 終了なら何もしない
-	if (isFinished_) {
-		return;
+	// エフェクト発生
+	if (rand() % 5 == 0) {
+		Vector3 position = {distribution(randomEngine), distribution(randomEngine), 0};
+		position *= 10;
+		EffectBorn(position);
 	}
 
-	// カウンターを1フレーム分の秒数進める
-	counter_ += 1.0f / 60.0f;
-
-	// 存続時間の上限に達したら
-	if (counter_ >= kDuration) {
-		counter_ = kDuration;
-
-		// 終了扱いにする
-		isFinished_ = true;
+	// エフェクト更新
+	// effect_->Update();
+	for (Effect* effect : effects_) {
+		effect->Update();
 	}
-	worldTransform_.rotation_.y = 3.14f;
 
-	// 色変更オブジェクトに色の数値を設定する
-	color_.w = std::clamp(1.0f - counter_ / kDuration, 0.0f, 1.0f);
-	objectColor_.SetColor(color_);
-
-	worldTransform_.rotation_.z += 0.1f;
-	worldTransform_.scale_.x *= 0.98f;
-	worldTransform_.scale_.y *= 0.98f;
-
-	// 3Dモデルを更新
-	worldTransform_.UpdateMatrix();
+	// デスフラグの立ったエフェクトを削除
+	effects_.remove_if([](Effect* effect) {
+		if (effect->IsFinished()) {
+			delete effect;
+			return true;
+		}
+		return false;
+	});
 }
 
+// 描画
 void GameScene::Draw() {
-
-	// 終了なら何もしない
-	if (isFinished_) {
-		return;
-	}
-
-
 	// DirectXCommon インスタンスの取得
-	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
+	//	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 
 	// 3Dモデル描画前処理
-	Model2::PreDraw(dxCommon->GetCommandList());
+	//	Model::PreDraw(dxCommon->GetCommandList());
+	Model::PreDraw(); // 仕様変更
 
-	// 3Dモデルを描画
-	model2->Draw(worldTransform_, camera_,&objectColor_);//この2つだけ白い四角形を描画する
+	// エフェクト描画
+	for (Effect* effect : effects_) {
+		effect->Draw(camera_);
+	}
 
 	// 3Dモデル描画後処理
-	Model2::PostDraw();
+	Model::PostDraw();
+}
+
+// エフェクト発生
+void GameScene::EffectBorn(Vector3 position) {
+	Vector3 color = {abs(distribution(randomEngine)), abs(distribution(randomEngine)), abs(distribution(randomEngine))};
+	for (int32_t i = 0; i < 15; i++) {
+		Effect* effect = new Effect();
+		float rotate = distribution(randomEngine) * 3.14f;
+		float size = 1.0f + abs(distribution(randomEngine)) * 4;
+		effect->Initialize(modelEffect_, rotate, size, position, color);
+		effects_.push_back(effect);
+	}
 }

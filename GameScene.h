@@ -1,38 +1,33 @@
 #pragma once
-#include "KamataEngine.h"
-#include "Model2.h"
 
-using namespace KamataEngine;
+#include <list>
+
+#include <3d/Camera.h>
+#include <3d/Model.h>
+#include <math/Vector3.h>
+
+#include "Effect.h"
 
 class GameScene {
 public:
-	GameScene();
+	GameScene() = default;
 	~GameScene();
 
-	// 初期化
 	void Initialize();
-	// 更新
 	void Update();
-	// 描画
 	void Draw();
+
+private:
+	// エフェクト発生
+	void EffectBorn(KamataEngine::Vector3 position);
 
 private:
 	// カメラ
 	KamataEngine::Camera camera_;
-	// ワールドトランスフォーム
-	KamataEngine::WorldTransform worldTransform_;
 
-	bool isFinished_;
+	// エフェクト用モデル
+	KamataEngine::Model* modelEffect_ = nullptr;
 
-	float counter_;
-	
-	const float kDuration = 2.0f;
-
-	// 色変更
-	KamataEngine::ObjectColor objectColor_;
-
-	// RGBAカラー
-	KamataEngine::Vector4 color_;
-
-	KamataEngine::Model2* model2 = nullptr;
+	// エフェクト一覧
+	std::list<Effect*> effects_;
 };
