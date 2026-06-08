@@ -32,7 +32,7 @@ private:
 	KamataEngine::ObjectColor objectColor_;
 
 	// RGBAカラー
-	KamataEngine::Vector4 color_ = {1.0f, 1.0f, 1.0f, 1.0f};
+	KamataEngine::Vector4 color_;
 
 	KamataEngine::Model2* model2 = nullptr;
 };

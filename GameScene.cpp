@@ -21,9 +21,11 @@ void GameScene::Initialize() {
 
 	// ワールド変換の初期化
 	worldTransform_.Initialize();
-	worldTransform_.scale_ = {5, 5, 5};
-
+	worldTransform_.scale_ = {10, 10, 10};
 	worldTransform_.rotation_.z = 0.785f;
+
+	objectColor_.Initialize();
+	color_ = {1.0f,1.0f, 1.0f, 1.0f};
 
 	// 3Dモデルデータの生成
 	model2 = Model2::CreateSquare(64);
@@ -53,8 +55,8 @@ void GameScene::Update() {
 	objectColor_.SetColor(color_);
 
 	worldTransform_.rotation_.z += 0.1f;
-	worldTransform_.scale_.x *= 1.05f;
-	worldTransform_.scale_.y *= 1.07f;
+	worldTransform_.scale_.x *= 0.98f;
+	worldTransform_.scale_.y *= 0.98f;
 
 	// 3Dモデルを更新
 	worldTransform_.UpdateMatrix();
@@ -75,7 +77,7 @@ void GameScene::Draw() {
 	Model2::PreDraw(dxCommon->GetCommandList());
 
 	// 3Dモデルを描画
-	model2->Draw(worldTransform_, camera_);//この2つだけ白い四角形を描画する
+	model2->Draw(worldTransform_, camera_,&objectColor_);//この2つだけ白い四角形を描画する
 
 	// 3Dモデル描画後処理
 	Model2::PostDraw();
